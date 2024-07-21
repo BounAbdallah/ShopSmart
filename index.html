@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Smart</title>
+  <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.30.0"></script>
+    <script defer src="app.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+      <div id="signupPage" style="display: none;">
+        <h2>Inscription</h2>
+        <form id="signupForm">
+          <div class="mb-3">
+            <label for="name" class="form-label">Nom:</label>
+            <input type="text" class="form-control" id="name" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" class="form-control" id="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Mot de passe:</label>
+            <input type="password" class="form-control" id="password" required>
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirmer mot de passe:</label>
+            <input type="password" class="form-control" id="confirmPassword" required>
+          </div>
+          <button type="submit" class="btn btn-primary">S'inscrire</button>
+          <button type="button" id="showLoginPage" class="btn btn-secondary">Connexion</button>
+        </form>
+      </div>
+  
+      <div id="loginPage">
+        <img src="images/Capture d’écran 2024-07-18 à 16.37.55 1.png" alt="">
+
+        <form id="loginForm">
+          <div class="mb-3">
+            <label for="loginEmail" class="form-label">Email:</label>
+            <input type="email" class="form-control" id="loginEmail" placeholder="Entrez votre email" required>
+          </div>
+          <div class="mb-3">
+            <label for="loginPassword" class="form-label">Mot de passe:</label>
+            <input type="password" class="form-control" id="loginPassword" placeholder="Entrez votre mot de passe" required>
+          </div>
+          <div class="mb-3">
+            <h3>Mot de passe oublier ?</h3>
+          </div>
+          <button type="submit" class="btn_ btn-primary">Se connecter</button>
+
+          <div class="autreMoyen">
+            <div class="saparator"></div>
+            <div class="connecterAutre">
+              Ou se connecter avec 
+            </div>
+            <div class="saparator"></div>
+          </div>
+          <div class="autresChoix">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 25 24" fill="none">
+              <path d="M22.3055 10.0415H21.5V10H12.5V14H18.1515C17.327 16.3285 15.1115 18 12.5 18C9.1865 18 6.5 15.3135 6.5 12C6.5 8.6865 9.1865 6 12.5 6C14.0295 6 15.421 6.577 16.4805 7.5195L19.309 4.691C17.523 3.0265 15.134 2 12.5 2C6.9775 2 2.5 6.4775 2.5 12C2.5 17.5225 6.9775 22 12.5 22C18.0225 22 22.5 17.5225 22.5 12C22.5 11.3295 22.431 10.675 22.3055 10.0415Z" fill="#FFC107"/>
+              <path d="M3.65302 7.3455L6.93851 9.755C7.82752 7.554 9.98052 6 12.5 6C14.0295 6 15.421 6.577 16.4805 7.5195L19.309 4.691C17.523 3.0265 15.134 2 12.5 2C8.65902 2 5.32802 4.1685 3.65302 7.3455Z" fill="#FF3D00"/>
+              <path d="M12.5 22C15.083 22 17.43 21.0115 19.2045 19.404L16.1095 16.785C15.0718 17.5742 13.8037 18.001 12.5 18C9.899 18 7.6905 16.3415 6.8585 14.027L3.5975 16.5395C5.2525 19.778 8.6135 22 12.5 22Z" fill="#4CAF50"/>
+              <path d="M22.3055 10.0415H21.5V10H12.5V14H18.1515C17.7571 15.1082 17.0467 16.0766 16.108 16.7855L16.1095 16.7845L19.2045 19.4035C18.9855 19.6025 22.5 17 22.5 12C22.5 11.3295 22.431 10.675 22.3055 10.0415Z" fill="#074C72"/>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 25 24" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 12.0558C2.5 17.0275 6.11083 21.1617 10.8333 22V14.7775H8.33333V12H10.8333V9.7775C10.8333 7.2775 12.4442 5.88917 14.7225 5.88917C15.4442 5.88917 16.2225 6 16.9442 6.11083V8.66667H15.6667C14.4442 8.66667 14.1667 9.2775 14.1667 10.0558V12H16.8333L16.3892 14.7775H14.1667V22C18.8892 21.1617 22.5 17.0283 22.5 12.0558C22.5 6.525 18 2 12.5 2C7 2 2.5 6.525 2.5 12.0558Z" fill="#074C72"/>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 25 24" fill="none">
+              <path d="M20.1641 17.5861C19.8873 18.2653 19.5454 18.913 19.1436 19.5191C18.6068 20.3262 18.166 20.8839 17.8281 21.1943C17.3034 21.7015 16.7396 21.9624 16.1369 21.9772C15.7051 21.9772 15.1833 21.8477 14.5756 21.5847C13.9658 21.3227 13.4061 21.1943 12.8933 21.1943C12.3565 21.1943 11.7808 21.3227 11.1641 21.5847C10.5483 21.8477 10.0505 21.9856 9.66971 21.9982C9.09296 22.0245 8.51621 21.7572 7.94146 21.1943C7.57462 20.8576 7.11582 20.2788 6.56507 19.4601C5.97532 18.5878 5.49054 17.5724 5.1107 16.4181C4.70388 15.169 4.49997 13.961 4.49997 12.7909C4.49997 11.4514 4.77485 10.2949 5.32561 9.32687C5.74217 8.56657 6.33771 7.93203 7.05485 7.48436C7.76201 7.03785 8.56928 6.79743 9.39383 6.78776C9.85363 6.78776 10.4564 6.93718 11.203 7.23181C11.9497 7.52645 12.4295 7.67587 12.6384 7.67587C12.7963 7.67587 13.3271 7.50014 14.2307 7.15184C15.0833 6.8288 15.803 6.69516 16.3928 6.74777C17.9921 6.88352 19.1925 7.54644 19.9912 8.74181C18.5618 9.65412 17.8551 10.9305 17.8691 12.5689C17.8811 13.8453 18.3219 14.907 19.1855 15.7499C19.5673 16.1345 20.0128 16.4423 20.5 16.658C20.394 16.981 20.2821 17.2893 20.1641 17.5861ZM16.4987 2.40088C16.4987 3.40053 16.1509 4.33494 15.4602 5.19885C14.6245 6.22585 13.615 6.82038 12.5205 6.72673C12.5061 6.60103 12.4991 6.47452 12.4995 6.34791C12.4995 5.3872 12.8953 4.36019 13.602 3.51944C13.9538 3.09432 14.4016 2.73971 14.9444 2.4577C15.4862 2.17991 15.9979 2.02628 16.4797 1.99997C16.4927 2.13466 16.4987 2.2683 16.4987 2.40088Z" fill="#383A3A"/>
+            </svg>
+
+          </div>
+          <div class="inscriptionBtn">
+            <h4>J’ai pas de compte ?</h4>
+            <button type="button" id="showSignupPage" class="btn- btn-secondary">Inscription</button>
+
+          </div>
+        </form>
+      </div>
+  
+      <div id="appSection" style="display: none;">
+        <h2>Shop Smart</h2>
+        <div id="userInfo" style="display: none;">
+            <p>Bonjour, <span id="userName"></span> !</p>
+          </div>
+          
+        <button id="logoutButton" class="btn btn-danger">Se déconnecter</button>
+        <button id="showAddProductSection" class="btn btn-primary">Ajouter un produit</button>
+        <button id="showProductListSection" class="btn btn-secondary">Afficher les produits</button>
+  
+        <div id="addProductSection" >
+          <h3>Ajouter un produit</h3>
+          <form id="addProductForm">
+            <div class="mb-3">
+              <input type="text" class="form-control" id="productName" placeholder="Nom du produit">
+            </div>
+            <div class="mb-3">
+
+              <input type="number" class="form-control" id="productPrice" placeholder="Prix  " required>
+            </div>
+            <div class="mb-3">
+
+              <input type="number" class="form-control" id="productQuantity" placeholder="Quantité" required>
+            </div>
+            <div class="mb-3">
+
+              <input type="date" class="form-control" id="selectedDate">
+            </div>
+            <div class="btnAdd">
+            <button type="submit" class="btn-- btn-primary">Ajouter</button>
+          </div>
+          </form>
+        </div>
+  
+        <div id="productListSection" style="display: none;">
+          <h3>Liste des produits</h3>
+          <div class="mb-3">
+            <label for="filterDate" class="form-label">Filtrer par date:</label>
+            <input type="date" class="form-control" id="filterDate">
+          </div>
+          <div id="noProductsMessage" style="display: none;">
+            <p>Aucun produit à afficher.</p>
+          </div>
+          <div id="totalPriceSection" style="display: none;">
+            <p>Total: <span id="totalPrice"></span></p>
+          </div>
+          <div id="productList" class="row">
+            <!-- Les produits seront affichés ici -->
+          </div>
+        </div>
+  
+        <div id="editProductSection" style="display: none;">
+          <h3>Modifier le produit</h3>
+          <form id="editProductForm">
+            <input type="hidden" id="editProductId">
+            <div class="mb-3">
+              <label for="editProductName" class="form-label">Nom du produit:</label>
+              <input type="text" class="form-control" id="editProductName" required>
+            </div>
+            <div class="mb-3">
+              <label for="editProductPrice" class="form-label">Prix du produit:</label>
+              <input type="number" class="form-control" id="editProductPrice" required>
+            </div>
+            <div class="mb-3">
+              <label for="editProductQuantity" class="form-label">Quantité:</label>
+              <input type="number" class="form-control" id="editProductQuantity" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+          </form>
+        </div>
+      </div>
+      
+    </div>
+  </body>
+</html>
