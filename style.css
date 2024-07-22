@@ -267,15 +267,56 @@ height: 42px;
 
 }
 
-.product-purchased {
-    background-color: #d4edda; /* Vert clair */
+.product-purchased .card-body{
+    background-color: #6AB357; /* Vert clair */
   }
   
-  .product-cancelled {
-    background-color: #f8d7da; /* Rouge clair */
+  .product-cancelled .card-body {
+    background-color: #B39957; /* Rouge clair */
   }
   
-  .product-pending {
-    background-color: #fff3cd; /* Jaune clair */
+  .product-pending .card-body{
+    background-color: #E45C5C; /* Jaune clair */
   }
-  
+  /* .card-body{
+    dis
+  } */
+
+  #productList{
+    margin-left: 04%;
+    padding-top: 20px;
+width: 345px;
+height: auto;
+flex-shrink: 0;
+border-radius: 8px 8px 0px 0px;
+background: #FFF;
+box-shadow: 0px -4px 8px 0px rgba(0, 0, 0, 0.25);
+  }
+
+  .card-body{
+    width: 326px;
+    height: 53px;
+    flex-shrink: 0;
+    border-radius: 8px;
+
+    display: flex;
+    flex-direction: row;
+    color: #FFF;
+font-family: Poppins;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 16px; /* 114.286% */
+
+  }
+  .contenues{
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  #appSection img{
+    width: 77px;
+height: 58px;
+flex-shrink: 0;
+  }
