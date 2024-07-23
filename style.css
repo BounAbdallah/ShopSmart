@@ -414,6 +414,11 @@ gap: 8px;
     width: 100px;
     height: 30px;
     font-size: 14px;
-    background: #B39957;
+    border: 0px;
+    display: flex;
+    margin-left:75%;
+    margin-top: 5px;
+    /* margin-top: 10px; */
+    background: #989794;
     color: #D6D1D1;
 }
