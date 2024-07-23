@@ -22,10 +22,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const showAddProductSectionButton = document.getElementById("showAddProductSection");
   const showProductListSectionButton = document.getElementById("showProductListSection");
 
-  const filterDateInput = document.getElementById("filterDate");
-
-  let currentUserId = null;
-
   // Fonction pour formater la date
   function formatDate(dateString) {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -33,24 +29,51 @@ document.addEventListener("DOMContentLoaded", async function () {
     return date.toLocaleDateString('fr-FR', options);
   }
 
+  // Sélectionner l'élément span où afficher la date
+  const dateSpan = document.querySelector('.tete span');
+
+  // Supposons que vous avez un objet "product" avec une propriété "date" contenant une date au format chaîne de caractères
+  const product = {
+    date: '2023-06-15T10:30:00Z'
+  };
+
+  // Formater la date et l'afficher dans l'élément span
+  dateSpan.textContent = formatDate(product.date);
+
+  let currentUserId = null;
+
   // Afficher la page d'inscription
   showSignupPageButton.addEventListener("click", function () {
-    toggleSections('signup');
+    signupPage.style.display = "block";
+    loginPage.style.display = "none";
+    appSection.style.display = "none";
+    addProductSection.style.display = "none";
+    productListSection.style.display = "none";
+    editProductSection.style.display = "none";
   });
 
   // Afficher la page de connexion
   showLoginPageButton.addEventListener("click", function () {
-    toggleSections('login');
+    signupPage.style.display = "none";
+    loginPage.style.display = "block";
+    appSection.style.display = "none";
+    addProductSection.style.display = "none";
+    productListSection.style.display = "none";
+    editProductSection.style.display = "none";
   });
 
   // Afficher la section d'ajout de produit
   showAddProductSectionButton.addEventListener("click", function () {
-    toggleSections('addProduct');
+    addProductSection.style.display = "block";
+    productListSection.style.display = "none";
+    editProductSection.style.display = "none";
   });
 
   // Afficher la section de liste des produits
   showProductListSectionButton.addEventListener("click", async function () {
-    toggleSections('productList');
+    addProductSection.style.display = "none";
+    productListSection.style.display = "block";
+    editProductSection.style.display = "none";
     await fetchAndDisplayProducts();
   });
 
@@ -87,7 +110,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       title: 'Succès',
       text: 'Inscription réussie !',
     });
-    toggleSections('login');
+    signupPage.style.display = "none";
+    loginPage.style.display = "block";
   });
 
   // Gérer la soumission du formulaire de connexion
@@ -114,8 +138,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         title: 'Succès',
         text: 'Connexion réussie !',
       });
-      toggleSections('app');
-      await fetchAndDisplayUserInfo();
+
+      signupPage.style.display = "none";
+      loginPage.style.display = "none";
+      appSection.style.display = "block";
+      productListSection.style.display = "block";
+
       await fetchAndDisplayProducts();
     } else {
       console.error("Objet utilisateur manquant ou mal formé.");
@@ -131,7 +159,13 @@ document.addEventListener("DOMContentLoaded", async function () {
       title: 'Déconnexion',
       text: 'Déconnexion réussie !',
     });
-    toggleSections('signup');
+    signupPage.style.display = "none";
+    loginPage.style.display = "block";
+    appSection.style.display = "none";
+    userInfoSection.style.display = "none";
+    addProductSection.style.display = "none";
+    productListSection.style.display = "none";
+    editProductSection.style.display = "none";
   });
 
   // Gérer la soumission du formulaire d'ajout de produit
@@ -179,11 +213,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     await fetchAndDisplayProducts();
   });
 
+  // Gérer le changement de filtre de date
+  const filterDateInput = document.getElementById("filterDate");
   filterDateInput.addEventListener("change", async function () {
     await fetchAndDisplayProducts();
   });
 
+  // Fonction pour récupérer et afficher les produits
   async function fetchAndDisplayProducts() {
+    console.log("Fetching Products");
+
     if (!currentUserId) {
       console.error("ID utilisateur non fourni.");
       return;
@@ -196,10 +235,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       query = query.eq("date", selectedDate);
     }
 
-    const { data, error } = await query;
+    const { data: products, error } = await query;
 
     if (error) {
-      console.error("Erreur lors de la récupération des produits:", error.message);
       Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -209,192 +247,99 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     const productList = document.getElementById("productList");
-    const noProductsMessage = document.getElementById("noProductsMessage");
-    const totalPriceSection = document.getElementById("totalPriceSection");
-    const totalPriceElement = document.getElementById("totalPrice");
-
     productList.innerHTML = "";
-    totalPriceElement.textContent = "";
+    
+    products.forEach(product => {
+      const statusClass = product.purchased
+        ? 'product-purchased'
+        : product.cancelled
+        ? 'product-cancelled'
+        : 'product-pending';
+    
+      const productCard = document.createElement("div");
+      productCard.className = `product-card ${statusClass}`;
+      productCard.innerHTML = `
+        <div class="donnes">
+          <p>${product.name}</p>
+          <p>${product.price} FCFA</p>
+          <p>X</p>
+          <p>${product.quantity}</p>
+          <p>Total: ${(product.price * product.quantity)} FCFA</p>
+        </div>
+        <div class="donnes">
+        <p>${formatDate(product.date)}</p>
 
-    if (data.length === 0) {
-      noProductsMessage.style.display = "block";
-      totalPriceSection.style.display = "none";
-    } else {
-      noProductsMessage.style.display = "none";
-      let totalPrice = 0;
-
-      data.forEach((product) => {
-        const statusClass = product.purchased
-          ? "purchased"
-          : product.canceled
-          ? "canceled"
-          : "pending";
-        const productCard = document.createElement("div");
-        productCard.className = `product-card ${statusClass}`;
-
-        const productInfo = document.createElement("div");
-        productInfo.className = "product-info";
-
-        const productName = document.createElement("h3");
-        productName.textContent = product.name;
-
-        const productDetails = document.createElement("p");
-        productDetails.textContent = `Prix: ${product.price} € - Quantité: ${product.quantity} - Date: ${formatDate(product.date)}`;
-
-        const actionsContainer = document.createElement("div");
-        actionsContainer.className = "actions-container";
-
-        const viewDetailsButton = document.createElement("button");
-        viewDetailsButton.textContent = "Voir les détails";
-        viewDetailsButton.addEventListener("click", function () {
-          viewProductDetails(product);
+        <p>Etat: ${product.purchased ? 'Acheter ✅' : product.cancelled ? 'Annuler ❌' : 'En attente 🕐'}</p>
+        </div>
+      `;
+    
+      // Set the color based on the status
+      switch (statusClass) {
+        case 'product-purchased':
+          productCard.style.backgroundColor = '#6AB357';
+          break;
+        case 'product-cancelled':
+          productCard.style.backgroundColor = '#E45C5C';
+          break;
+        case 'product-pending':
+          productCard.style.backgroundColor = '#B39957';
+          break;
+      }
+    
+      // Disable clicking if status is already set
+      if (product.purchased || product.cancelled) {
+        productCard.style.pointerEvents = 'none'; // Disable click events
+        productCard.style.opacity = '0.6'; // Optional: visually indicate disabled state
+      } else {
+        productCard.addEventListener("click", async function () {
+          const { value: status } = await Swal.fire({
+            title: 'Changer le statut du produit',
+            input: 'select',
+            inputOptions: {
+              'pending': 'En attente',
+              'purchased': 'Acheter',
+              'cancelled': 'Annuler',
+            },
+            inputPlaceholder: 'Sélectionnez un statut',
+            showCancelButton: true,
+          });
+    
+          if (status) {
+            const updatedProduct = {
+              purchased: status === 'purchased',
+              cancelled: status === 'cancelled'
+            };
+    
+            const { error } = await database.from("products").update(updatedProduct).eq("id", product.id);
+    
+            if (error) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: 'Erreur lors de la mise à jour du produit: ' + error.message,
+              });
+              return;
+            }
+    
+            Swal.fire({
+              icon: 'success',
+              title: 'Succès',
+              text: 'Statut du produit mis à jour avec succès !',
+            });
+    
+            await fetchAndDisplayProducts();
+          }
         });
-
-        productInfo.appendChild(productName);
-        productInfo.appendChild(productDetails);
-        actionsContainer.appendChild(viewDetailsButton);
-        productCard.appendChild(productInfo);
-        productCard.appendChild(actionsContainer);
-        productList.appendChild(productCard);
-
-        if (!product.canceled) {
-          totalPrice += product.price * product.quantity;
-        }
-      });
-
-      totalPriceElement.textContent = `Prix total: ${totalPrice} €`;
-      totalPriceSection.style.display = "block";
-    }
-  }
-
-  function viewProductDetails(product) {
-    toggleSections("editProduct");
-
-    const editProductName = document.getElementById("editProductName");
-    const editProductPrice = document.getElementById("editProductPrice");
-    const editProductQuantity = document.getElementById("editProductQuantity");
-    const editSelectedDate = document.getElementById("editSelectedDate");
-    const editPurchasedCheckbox = document.getElementById("editPurchased");
-    const editCanceledCheckbox = document.getElementById("editCanceled");
-    const saveEditButton = document.getElementById("saveEditButton");
-    const deleteProductButton = document.getElementById("deleteProductButton");
-
-    editProductName.value = product.name;
-    editProductPrice.value = product.price;
-    editProductQuantity.value = product.quantity;
-    editSelectedDate.value = product.date;
-    editPurchasedCheckbox.checked = product.purchased;
-    editCanceledCheckbox.checked = product.canceled;
-
-    saveEditButton.onclick = async function () {
-      const updatedProduct = {
-        name: editProductName.value,
-        price: editProductPrice.value,
-        quantity: editProductQuantity.value,
-        date: editSelectedDate.value,
-        purchased: editPurchasedCheckbox.checked,
-        canceled: editCanceledCheckbox.checked,
-      };
-
-      const { error } = await database.from("products").update(updatedProduct).eq("id", product.id);
-
-      if (error) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erreur',
-          text: 'Erreur lors de la mise à jour du produit: ' + error.message,
-        });
-        return;
+      }
+    
+      productList.appendChild(productCard);
+    });
       }
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Succès',
-        text: 'Produit mis à jour avec succès !',
-      });
-      toggleSections("productList");
-      await fetchAndDisplayProducts();
-    };
-
-    deleteProductButton.onclick = async function () {
-      const { error } = await database.from("products").delete().eq("id", product.id);
-
-      if (error) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erreur',
-          text: 'Erreur lors de la suppression du produit: ' + error.message,
-        });
-        return;
-      }
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Succès',
-        text: 'Produit supprimé avec succès !',
-      });
-      toggleSections("productList");
-      await fetchAndDisplayProducts();
-    };
-  }
-
-  async function fetchAndDisplayUserInfo() {
-    const { data: user, error } = await database.from("users").select("*").eq("id", currentUserId).single();
-
+  // Fonction pour gérer les opérations sur la base de données
+  async function handleDatabaseOperation(operation, data) {
+    const { error } = await operation(data);
     if (error) {
-      console.error("Erreur lors de la récupération des informations utilisateur:", error.message);
-      Swal.fire({
-        icon: 'error',
-        title: 'Erreur',
-        text: 'Erreur lors de la récupération des informations utilisateur: ' + error.message,
-      });
-      return;
-    }
-
-    if (user) {
-      userInfoSection.textContent = `Bonjour, ${user.name} !`;
-    } else {
-      console.error("Utilisateur introuvable.");
-    }
-  }
-
-  function toggleSections(section) {
-    signupPage.style.display = "none";
-    loginPage.style.display = "none";
-    appSection.style.display = "none";
-    addProductSection.style.display = "none";
-    productListSection.style.display = "none";
-    editProductSection.style.display = "none";
-
-    switch (section) {
-      case "signup":
-        signupPage.style.display = "block";
-        break;
-      case "login":
-        loginPage.style.display = "block";
-        break;
-      case "app":
-        appSection.style.display = "block";
-        break;
-      case "addProduct":
-        addProductSection.style.display = "block";
-        break;
-      case "productList":
-        productListSection.style.display = "block";
-        break;
-      case "editProduct":
-        editProductSection.style.display = "block";
-        break;
-      default:
-        loginPage.style.display = "block";
-    }
-  }
-
-  async function handleDatabaseOperation(operation, ...params) {
-    try {
-      const { error } = await operation(...params);
-      if (error) throw error;
-    } catch (error) {
       Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -402,6 +347,4 @@ document.addEventListener("DOMContentLoaded", async function () {
       });
     }
   }
-
-  toggleSections('signup');
 });

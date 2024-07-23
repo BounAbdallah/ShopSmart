@@ -266,23 +266,23 @@ margin-left:52%;
 height: 42px;
 
 }
+.product-purchased .product-card {
+  background-color: #6AB357;
+}
 
-.product-purchased .card-body{
-    background-color: #6AB357; /* Vert clair */
-  }
-  
-  .product-cancelled .card-body {
-    background-color: #B39957; /* Rouge clair */
-  }
-  
-  .product-pending .card-body{
-    background-color: #E45C5C; /* Jaune clair */
-  }
+.purchased .product-card{
+  background-color: #E45C5C;
+}
+
+.product-pending .product-card {
+  background-color: #B39957;
+}
   /* .card-body{
     dis
   } */
 
   #productList{
+    margin-top: 40px;
     margin-left: 04%;
     padding-top: 20px;
 width: 345px;
@@ -316,7 +316,104 @@ line-height: 16px; /* 114.286% */
   }
 
   #appSection img{
-    width: 77px;
-height: 58px;
+    width: 100px;
+height: 70px;
+margin-bottom: 30%;
 flex-shrink: 0;
   }
+
+  #productListSection{
+    margin-bottom: 40%;
+    border-radius: 30px;
+
+    padding-bottom: 50%;
+  }
+
+  .tete{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
+    width: 420px;
+    height: 69px;
+    flex-shrink: 0;
+    background: #FFF;
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.25);
+    margin-top:-45px;
+    margin-left: -20px;
+    gap: 45px;
+}
+
+.tete span{
+    color: #6AB357;
+font-family: Poppins;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 16px; 
+margin-top: 25px;
+}
+
+#addProductSection{
+    margin-top: 20px;
+    margin-left:25px;
+    margin-bottom: 20px;
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#productList{
+    width:412px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap:15px;
+    border-radius: 8px 8px 8px 8px;
+    background: #FFF;
+    margin-left: -10px;
+    box-shadow: 0px -4px 8px 0px rgba(0, 0, 0, 0.25);
+}
+
+.product-card{
+
+    width: 40%;
+    height: 75px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    border-radius: 8px;
+    gap: 8px;
+background: #B39957;
+color: #FFF;
+font-family: Poppins;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 16px; /* 114.286% */
+/* align-items: center; */
+vertical-align: middle;
+margin: 2px;
+
+}
+.donnes{
+    padding: 4px;
+    /* margin-top: 20px; */
+    display: flex;
+    flex-direction: row;
+gap: 8px;
+}
+
+
+
+#filterDate{
+    margin-top: 20px;
+}
+#logoutButton{
+    width: 100px;
+    height: 30px;
+    font-size: 14px;
+    background: #B39957;
+    color: #D6D1D1;
+}
